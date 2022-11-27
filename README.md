@@ -20,5 +20,8 @@ I have provided an example of what that path should look like.
 
 Also, add the path where you would like the output file to be saved, an example has also been provided.
 
-Run the script and the output file will be created in the location you specified.
+To run the script, open up a command shell (e.g. CMD, PowerShell) and run:
+`python <path_here>CrunchParser.py`
+
+* The output file will be created in the location you specified.
 
