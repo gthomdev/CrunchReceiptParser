@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 import pyexcel
-
+import xlsxwriter
+import os
 
 def get_soup_from_file_path(file_path):
     try:
@@ -77,13 +78,32 @@ def export_parsed_crunch_table_to_xls(parsed_table, file_path):
     pyexcel.save_as(records=parsed_table, dest_file_name=file_path)
 
 
+def write_xlswriter_row(worksheet, row, row_data):
+    for col, data in enumerate(row_data):
+        worksheet.write(row, col, data)
+
+
+def write_xlswriter_column_headers(worksheet, column_headers):
+    for col, header in enumerate(column_headers):
+        worksheet.write(0, col, header)
+
+
 def main():
     # Example HTML file path: C:\Users\Downloads\crunch.html
     # Example Export Path: C:\Users\Downloads\crunch.xlsx
     html_path = r''
     export_path = r''
+    receipt_directory = 'C:\\Users\\Luis\\Desktop\\crunch\\Receipts\\'
     parsed_table = get_parsed_crunch_table_from_file_path(html_path)
-    export_parsed_crunch_table_to_xls(parsed_table, export_path)
+    workbook = xlsxwriter.Workbook(export_path)
+    worksheet = workbook.add_worksheet()
+    write_xlswriter_column_headers(worksheet, parsed_table[0].keys())
+    worksheet.write_url('F1', receipt_directory)
+    for row, row_data in enumerate(parsed_table):
+        write_xlswriter_row(worksheet, row + 1, row_data.values())
+        file_path = os.path.join(receipt_directory, row_data['Attachment Name'])
+        worksheet.write_url(row + 1, 5, file_path)
+    workbook.close()
 
 
 if __name__ == '__main__':
