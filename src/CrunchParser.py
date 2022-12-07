@@ -91,17 +91,18 @@ def write_xlswriter_column_headers(worksheet, column_headers):
 def main():
     # Example HTML file path: C:\Users\Downloads\crunch.html
     # Example Export Path: C:\Users\Downloads\crunch.xlsx
-    html_path = r''
-    export_path = r''
+    html_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\Expenses _ Crunch.html'
+    export_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\Expenses _ Crunch.xlsx'
     receipt_directory = 'C:\\Users\\Luis\\Desktop\\crunch\\Receipts\\'
     parsed_table = get_parsed_crunch_table_from_file_path(html_path)
     workbook = xlsxwriter.Workbook(export_path)
     worksheet = workbook.add_worksheet()
     write_xlswriter_column_headers(worksheet, parsed_table[0].keys())
     worksheet.write_url('F1', receipt_directory)
+
     for row, row_data in enumerate(parsed_table):
         write_xlswriter_row(worksheet, row + 1, row_data.values())
-        file_path = os.path.join(receipt_directory, row_data['Attachment Name'])
+        file_path = os.path.join(receipt_directory, "01_" + row_data['Attachment Name'])
         worksheet.write_url(row + 1, 5, file_path)
     workbook.close()
 
