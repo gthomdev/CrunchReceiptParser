@@ -99,9 +99,10 @@ def main():
     worksheet = workbook.add_worksheet()
     write_xlswriter_column_headers(worksheet, parsed_table[0].keys())
     worksheet.write_url('F1', receipt_directory)
+
     for row, row_data in enumerate(parsed_table):
         write_xlswriter_row(worksheet, row + 1, row_data.values())
-        file_path = os.path.join(receipt_directory, row_data['Attachment Name'])
+        file_path = os.path.join(receipt_directory, "01_" + row_data['Attachment Name'])
         worksheet.write_url(row + 1, 5, file_path)
     workbook.close()
 
