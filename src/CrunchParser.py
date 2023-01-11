@@ -94,9 +94,9 @@ def write_xlswriter_column_headers(worksheet, column_headers):
 def main():
     # Example HTML file path: C:\Users\Downloads\crunch.html
     # Example Export Path: C:\Users\Downloads\crunch.xlsx
-    html_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\Expenses _ Crunch.html'
-    export_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\crunch.xlsx'
-    receipt_directory = r'C:\Users\George\Desktop\crunch\Receipts'
+    html_path = r''
+    export_path = r''
+    receipt_directory = 'C:\\Users\\Luis\\Desktop\\crunch\\Receipts\\'
     parsed_table = get_parsed_crunch_table_from_file_path(html_path)
     workbook = xlsxwriter.Workbook(export_path)
     worksheet = workbook.add_worksheet()
