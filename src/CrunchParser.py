@@ -33,7 +33,10 @@ def get_supplier_from_table_row_node(table_row_node):
 
 
 def get_attachment_name_from_table_row_node(table_row_node):
-    return table_row_node.find('div', class_='drop-zone--file--name').string
+    if table_row_node.find('div', class_='drop-zone--file--name') is None:
+        return ''
+    else:
+        return table_row_node.find('div', class_='drop-zone--file--name').string
 
 
 def get_paid_status_from_table_row_node(table_row_node):
@@ -91,19 +94,24 @@ def write_xlswriter_column_headers(worksheet, column_headers):
 def main():
     # Example HTML file path: C:\Users\Downloads\crunch.html
     # Example Export Path: C:\Users\Downloads\crunch.xlsx
-    html_path = r''
-    export_path = r''
-    receipt_directory = 'C:\\Users\\Luis\\Desktop\\crunch\\Receipts\\'
+    html_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\Expenses _ Crunch.html'
+    export_path = r'C:\Users\George\Documents\gthomdev\CrunchReceiptParser\samples\crunch.xlsx'
+    receipt_directory = r'C:\Users\George\Desktop\crunch\Receipts'
     parsed_table = get_parsed_crunch_table_from_file_path(html_path)
     workbook = xlsxwriter.Workbook(export_path)
     worksheet = workbook.add_worksheet()
     write_xlswriter_column_headers(worksheet, parsed_table[0].keys())
     worksheet.write_url('F1', receipt_directory)
-
+    final_table = []
     for row, row_data in enumerate(parsed_table):
+        if row_data['Attachment Name'] != '':
+            final_table.append(row_data)
+
+    for row, row_data in enumerate(final_table):
         write_xlswriter_row(worksheet, row + 1, row_data.values())
         file_path = os.path.join(receipt_directory, "01_" + row_data['Attachment Name'])
         worksheet.write_url(row + 1, 5, file_path)
+
     workbook.close()
 
 
