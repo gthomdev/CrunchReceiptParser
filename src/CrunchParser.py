@@ -3,6 +3,7 @@ from collections import OrderedDict
 import pyexcel
 import xlsxwriter
 import os
+from datetime import datetime
 
 def get_soup_from_file_path(file_path):
     try:
@@ -25,7 +26,8 @@ def get_total_from_table_row_node(table_row_node):
 
 
 def get_date_from_table_row_node(table_row_node):
-    return table_row_node.find('span', class_='text-style u-margin--none text--minor').string
+    date_string = table_row_node.find('span', class_='text-style u-margin--none text--minor').string
+    return datetime.strptime(date_string, '%d %b %Y').strftime('%d/%m/%Y')
 
 
 def get_supplier_from_table_row_node(table_row_node):
@@ -108,8 +110,12 @@ def main():
             final_table.append(row_data)
 
     for row, row_data in enumerate(final_table):
+        file_path = ""
         write_xlswriter_row(worksheet, row + 1, row_data.values())
-        file_path = os.path.join(receipt_directory, "01_" + row_data['Attachment Name'])
+        if row_data['Attachment Name'][-4:] == '.pdf':
+            file_path = os.path.join(receipt_directory, "00_" + row_data['Attachment Name'])
+        elif row_data['Attachment Name'][-4:] == 'jpeg':
+            file_path = os.path.join(receipt_directory, "01_" + row_data['Attachment Name'])
         worksheet.write_url(row + 1, 5, file_path)
 
     workbook.close()
